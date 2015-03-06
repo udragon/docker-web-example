@@ -1,0 +1,23 @@
+# Postgres database
+db:
+  image: postgres
+
+# Helloworld web app + gunicorn
+web:
+  build: .
+  command: gunicorn -b 0.0.0.0:8000 helloworld.wsgi:application
+  volumes:
+    - .:/code
+  links:
+    - db
+
+# nginx server
+nginx:
+  image: nginx
+  volumes:
+    - etc/nginx:/etc/nginx
+  ports:
+    - "9000:80"
+  links:
+    - web
+
